@@ -61,10 +61,13 @@ a{
   50% { transform: scale(1.2) translateY(-400px)}
 }
 .main-menu{
-    border:rgb(0, 0, 0);border-width: 5px;border-style: solid;
     text-align: center;
+    padding-top: 10px;
     padding-left: 10px;
     padding-right: 10px;
+}
+#user-input{
+    padding-top:20px;
 }
 
 body {
