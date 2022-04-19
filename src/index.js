@@ -42,6 +42,7 @@ function renderCard(brewery) {
         const ratingButton = document.createElement('button');
         ratingButton.classList.add(`button-${i+1}`);
         ratingButton.textContent = starEmpty;
+        ratingButton.addEventListener('click', (event) => ratingButtonClickHandler(event));
         rating.append(ratingButton);
     }
     //rating.textContent = "☆☆☆☆☆";
@@ -63,6 +64,26 @@ function renderCard(brewery) {
     divCard.append(breweryPhone);
 
     cardsSection.append(divCard);
+}
+
+function ratingButtonClickHandler(event) {
+    let current = event.target;
+    let prevSibling = current.previousElementSibling;
+
+    current.textContent = starFull;
+    while(prevSibling) {
+        prevSibling.textContent = starFull;
+        current = prevSibling;
+        prevSibling = current.previousElementSibling;
+    }
+
+    current = event.target;
+    let nextSibling = current.nextElementSibling
+    while(nextSibling) {
+        nextSibling.textContent = starEmpty;
+        current = nextSibling;
+        nextSibling = current.nextElementSibling;
+    }
 }
 
 init();
