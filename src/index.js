@@ -36,9 +36,15 @@ function renderCard(brewery) {
     breweryName.textContent = brewery.name;
     divCard.append(breweryName);
 
-    const rating = document.createElement('button');
+    const rating = document.createElement('div');
     rating.classList.add('rating');
-    rating.textContent = "☆☆☆☆☆";
+    for(let i = 0; i < 5; i++){
+        const ratingButton = document.createElement('button');
+        ratingButton.classList.add(`button-${i+1}`);
+        ratingButton.textContent = starEmpty;
+        rating.append(ratingButton);
+    }
+    //rating.textContent = "☆☆☆☆☆";
     divCard.append(rating);
 
     const breweryStreet = document.createElement('p');
