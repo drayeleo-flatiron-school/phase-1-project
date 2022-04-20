@@ -1,5 +1,20 @@
 const starEmpty = "☆";
 const starFull = "★";
+const form = document.querySelector("#user-input");
+
+form.addEventListener("submit", (event) =>{
+    event.preventDefault();
+    const city = event.target["city-input"].value.toLowerCase();
+    console.log(city);
+
+    fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}`)
+    .then(response => response.json())
+    .then(breweries => {
+    console.log(breweries);
+    document.querySelector('#brewery-cards').innerHTML = "";
+    breweries.forEach(brewery => renderCard(brewery));        
+    });
+})
 
 function init() {
     fetch('https://api.openbrewerydb.org/breweries')
@@ -9,21 +24,7 @@ function init() {
         breweries.forEach(brewery => renderCard(brewery)); 
     });
 
-    const form = document.querySelector("#user-input");
-
-    form.addEventListener("submit", (event) =>{
-        event.preventDefault();
-        const city = event.target["city-input"].value.toLowerCase();
-        console.log(city);
-
-        fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}`)
-        .then(response => response.json())
-        .then(breweries => {
-        console.log(breweries);
-        document.querySelector('#brewery-cards').innerHTML = "";
-        breweries.forEach(brewery => renderCard(brewery));        
-        });
-    })
+    
 }
 
 function renderCard(brewery) {
@@ -63,6 +64,14 @@ function renderCard(brewery) {
     breweryPhone.textContent = brewery.phone;
     divCard.append(breweryPhone);
 
+    console.log(typeof brewery.website_url)
+    if (brewery.website_url){
+        const breweryWebsite = document.createElement('a'); 
+        breweryWebsite.href = brewery.website_url;
+        breweryWebsite.textContent = "website"
+        divCard.append(breweryWebsite)
+    };
+    
     cardsSection.append(divCard);
 }
 
@@ -86,7 +95,8 @@ function ratingButtonClickHandler(event) {
     }
 }
 
-init();
+// init();
+
 btn = document.querySelector("#party-button")
 btn.addEventListener("click", ()=>{
     const img = document.createElement("img")

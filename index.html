@@ -2,17 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Brewery App</title>
+    <title> The Brewery App</title>
     <link rel="stylesheet" href="./style.css">
+    
 </head>
 <body>
     <div class="header">
-        <nav class = "main-menu"> 
+        <!-- <nav class = "main-menu"> 
             <a class = "main-menu" href="index.html"> Home </a><a class = "main-menu" href="index.html"> Menu </a><a class = "main-menu" href="index.html"> Contact </a><a class = "main-menu" href="index.html"> Follow </a>
-    </nav>
+    </nav> -->
         <div class="info">
-        <h4><a href="#category">sample text</a></h4>
-          <h1>Brewery App</h1>
+        <h4><a href="#category">Find your Local Brewery!</a></h4>
+          <h1> The Brewery App</h1>
         </div>
       </div>
       <section class="content">
@@ -25,7 +26,7 @@
     <form id = "user-input">
         <label>City:</label>
         <input type="text" id="city-input" class = "input">
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" id="submit-button">
     </form>
     <p>Click Submit to receive results </p>
     <button id="party-button">Order Online!!</button>
@@ -33,5 +34,14 @@
     <div id="brewery-cards"></div>
     <script src="./src/index.js"></script>  
 </body>
+<footer>
+    <h5> by: Dylan Raye-Leonard, Erick Vargas, Elise Sadsad
+        <br>
+        <br>
+        <a id="open-brewery-db" href="https://www.openbrewerydb.org/">
+            Open Brewery DB
+        </a> 
+    </h5>
+</footer>
 </html>
 

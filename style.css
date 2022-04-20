@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Josefin+Sans:400,400i,600,600i');
 html,body{
   margin:0;
-  height:120%;
+  /* height:120%; */
   font-family: 'Josefin Sans', sans-serif;
 
 }
@@ -42,7 +42,9 @@ a{
   z-index:-2
 }
 .header a{
-  color:#eee
+  color:#eee;
+  font-size: 20px;
+  letter-spacing: 5px;
 }
 
 .sides, .info{
@@ -67,7 +69,8 @@ a{
     padding-right: 10px;
 }
 #user-input{
-    padding-top:20px;
+    padding-top:50px;
+    font-size: 25px;
 }
 
 body {
@@ -77,5 +80,32 @@ body {
 };
 
 header{
-    font-size: larger;
+    /* font-size: larger; */
+    font-size: 20px;
+}
+
+footer {
+  background-color: rgb(58, 56, 56);
+  padding: 10px;
+  color:#eee;
+  position: relative;
+  height: 80px;
+  margin-top: 30px;
+  letter-spacing: 2px;
+  font-size: 15px;
+}
+
+h1 {
+  font-size:70px;
+  letter-spacing: 5px;
+}
+#submit-button {
+  font-size: 15px;
+}
+#open-brewery-db {
+  font-size: 15px;
+  color:#eee;
+}
+#party-button{
+  font-size: 20px;
 }
