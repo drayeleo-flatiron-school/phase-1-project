@@ -87,3 +87,11 @@ function ratingButtonClickHandler(event) {
 }
 
 init();
+btn = document.querySelector("#party-button")
+btn.addEventListener("click", ()=>{
+    const img = document.createElement("img")
+    
+    img.src="https://c.tenor.com/_4YgA77ExHEAAAAC/rick-roll.gif"
+    alert("21+ ONLY!!!!")
+})
+console.log(btn)
