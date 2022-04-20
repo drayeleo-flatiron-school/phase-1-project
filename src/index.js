@@ -5,7 +5,6 @@ const form = document.querySelector("#user-input");
 form.addEventListener("submit", (event) =>{
     event.preventDefault();
     const city = event.target["city-input"].value.toLowerCase();
-    console.log(city);
 
     fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}`)
     .then(response => response.json())
@@ -15,17 +14,6 @@ form.addEventListener("submit", (event) =>{
     breweries.forEach(brewery => renderCard(brewery));        
     });
 })
-
-function init() {
-    fetch('https://api.openbrewerydb.org/breweries')
-    .then(response => response.json())
-    .then(breweries => {
-        console.log(breweries);
-        breweries.forEach(brewery => renderCard(brewery)); 
-    });
-
-    
-}
 
 function renderCard(brewery) {
     const cardsSection = document.querySelector('#brewery-cards')
@@ -46,7 +34,6 @@ function renderCard(brewery) {
         ratingButton.addEventListener('click', (event) => ratingButtonClickHandler(event));
         rating.append(ratingButton);
     }
-    //rating.textContent = "☆☆☆☆☆";
     divCard.append(rating);
 
     const breweryStreet = document.createElement('p');
@@ -64,7 +51,7 @@ function renderCard(brewery) {
     breweryPhone.textContent = brewery.phone;
     divCard.append(breweryPhone);
 
-    console.log(typeof brewery.website_url)
+    //console.log(typeof brewery.website_url)
     if (brewery.website_url){
         const breweryWebsite = document.createElement('a'); 
         breweryWebsite.href = brewery.website_url;
@@ -95,8 +82,6 @@ function ratingButtonClickHandler(event) {
     }
 }
 
-// init();
-
 btn = document.querySelector("#party-button")
 btn.addEventListener("click", ()=>{
     const img = document.createElement("img")
@@ -104,4 +89,3 @@ btn.addEventListener("click", ()=>{
     img.src="https://c.tenor.com/_4YgA77ExHEAAAAC/rick-roll.gif"
     alert("21+ ONLY!!!!")
 })
-console.log(btn)
