@@ -19,6 +19,31 @@
       "apiId": "argus-brewery-chicago",
       "rating": "2",
       "id": 4
+    },
+    {
+      "apiId": "10-barrel-brewing-co-portland",
+      "rating": "2",
+      "id": 5
+    },
+    {
+      "apiId": "13-virtues-brewing-co-portland",
+      "rating": "5",
+      "id": 6
+    },
+    {
+      "apiId": "alameda-brewing-co-portland-1",
+      "rating": "5",
+      "id": 7
+    },
+    {
+      "apiId": "allagash-brewing-co-portland",
+      "rating": "4",
+      "id": 8
+    },
+    {
+      "apiId": "alameda-brewing-co-portland-2",
+      "rating": "4",
+      "id": 9
     }
   ]
 }
