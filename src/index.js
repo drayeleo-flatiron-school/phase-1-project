@@ -1,24 +1,43 @@
 const starEmpty = "☆";
 const starFull = "★";
-const form = document.querySelector("#user-input");
+let ratingsJson = [];
 
-form.addEventListener("submit", (event) =>{
-    event.preventDefault();
-    const city = event.target["city-input"].value.toLowerCase();
 
-    fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}`)
+function init() {
+    const form = document.querySelector("#user-input");
+
+    form.addEventListener("submit", (event) =>{
+        event.preventDefault();
+        const city = event.target["city-input"].value.toLowerCase();
+
+        fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}`)
+        .then(response => response.json())
+        .then(breweries => {
+        console.log(breweries);
+        document.querySelector('#brewery-cards').innerHTML = "";
+        breweries.forEach(brewery => renderCard(brewery));        
+        });
+    })
+
+    btn = document.querySelector("#party-button")
+    btn.addEventListener("click", ()=>{
+        // const img = document.createElement("img")
+        // img.src="https://c.tenor.com/_4YgA77ExHEAAAAC/rick-roll.gif"
+        alert("21+ ONLY!!!!")
+    })
+
+    //Create local copy of ratings database in ratings.JSON
+    fetch(`http://localhost:3000/breweryRatings`)
     .then(response => response.json())
-    .then(breweries => {
-    console.log(breweries);
-    document.querySelector('#brewery-cards').innerHTML = "";
-    breweries.forEach(brewery => renderCard(brewery));        
-    });
-})
+    .then(data => ratingsJson = data.map(x=>x));
+}
+
 
 function renderCard(brewery) {
     const cardsSection = document.querySelector('#brewery-cards')
 
     const divCard = document.createElement('div');
+    divCard.id = brewery.id;
 
     const breweryName = document.createElement('h2');
     breweryName.classList.add('name');
@@ -62,18 +81,34 @@ function renderCard(brewery) {
     cardsSection.append(divCard);
 }
 
+
 function ratingButtonClickHandler(event) {
-    let current = event.target;
+
+    setStarDisplay(event.target);
+
+    const breweryCardElement = event.target.parentElement.parentElement
+
+    //determine whether to post or patch
+    if(ratingsJson.find(element => element.apiId === breweryCardElement.id)) {
+        updateRating(event); //patch
+    } else {
+        postNewRating(event); //post
+    }
+}
+
+
+function setStarDisplay(target) {
+    let current = target;
     let prevSibling = current.previousElementSibling;
 
+    //change star display
     current.textContent = starFull;
     while(prevSibling) {
         prevSibling.textContent = starFull;
         current = prevSibling;
         prevSibling = current.previousElementSibling;
     }
-
-    current = event.target;
+    current = target;
     let nextSibling = current.nextElementSibling
     while(nextSibling) {
         nextSibling.textContent = starEmpty;
@@ -82,10 +117,66 @@ function ratingButtonClickHandler(event) {
     }
 }
 
-btn = document.querySelector("#party-button")
-btn.addEventListener("click", ()=>{
-    const img = document.createElement("img")
+
+function updateRating(event) {
+    const breweryCardElement = event.target.parentElement.parentElement
+    const matchIndex = ratingsJson.findIndex(element => element.apiId === breweryCardElement.id);
+
+    const obj = {
+        rating : event.target.className.slice(-1),
+    } 
+
+    fetch(`http://localhost:3000/breweryRatings/${ratingsJson[matchIndex].id}`, {
+    method: 'PATCH',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(obj),
+    })
+    .then(response => response.json())
+    .then(data => {
+    console.log('Success:', data);
+    ratingsJson[matchIndex] = data; //update ratingsJson
+    })
+    .catch((error) => {
+    console.error('Error:', error);
+    });
+}
+
+
+function postNewRating(event) {
+    const breweryCardElement = event.target.parentElement.parentElement
     
-    img.src="https://c.tenor.com/_4YgA77ExHEAAAAC/rick-roll.gif"
-    alert("21+ ONLY!!!!")
-})
+    const obj = {
+        apiId : breweryCardElement.id,
+        rating : event.target.className.slice(-1),
+    } 
+    //update ratingsJson
+    // ratingsJson.push(obj);
+    // console.log(ratingsJson);
+    
+    fetch('http://localhost:3000/breweryRatings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(obj),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      ratingsJson.push(data); //update ratingsJson
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}
+
+
+init();
+
+/*
+fetch all ratings and create local array out of them 
+then edit that array when ratings are changed. if local rating exists, run "patch".
+If not, run "post"
+*/
