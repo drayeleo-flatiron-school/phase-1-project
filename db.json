@@ -1,0 +1,24 @@
+{
+  "breweryRatings": [
+    {
+      "apiId": "5-rabbit-cerveceria-inc-chicago",
+      "rating": "2",
+      "id": 1
+    },
+    {
+      "apiId": "alarmist-brewing-co-chicago",
+      "rating": "2",
+      "id": 2
+    },
+    {
+      "apiId": "aleman-brewing-chicago",
+      "rating": "5",
+      "id": 3
+    },
+    {
+      "apiId": "argus-brewery-chicago",
+      "rating": "2",
+      "id": 4
+    }
+  ]
+}

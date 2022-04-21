@@ -6,6 +6,14 @@ let ratingsJson = [];
 function init() {
     const form = document.querySelector("#user-input");
 
+    //Create local copy of ratings database in ratingsJson
+    fetch(`http://localhost:3000/breweryRatings`)
+    .then(response => response.json())
+    .then(data => {
+        ratingsJson = data;
+        console.log("ratingsJson: ", ratingsJson);
+    });
+    
     form.addEventListener("submit", (event) =>{
         event.preventDefault();
         const city = event.target["city-input"].value.toLowerCase();
@@ -13,9 +21,9 @@ function init() {
         fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}`)
         .then(response => response.json())
         .then(breweries => {
-        console.log(breweries);
+        console.log(`breweries data for ${city}: `, breweries);
         document.querySelector('#brewery-cards').innerHTML = "";
-        breweries.forEach(brewery => renderCard(brewery));        
+        breweries.forEach(brewery => renderCard(brewery));
         });
     })
 
@@ -25,51 +33,59 @@ function init() {
         // img.src="https://c.tenor.com/_4YgA77ExHEAAAAC/rick-roll.gif"
         alert("21+ ONLY!!!!")
     })
-
-    //Create local copy of ratings database in ratings.JSON
-    fetch(`http://localhost:3000/breweryRatings`)
-    .then(response => response.json())
-    .then(data => ratingsJson = data.map(x=>x));
 }
 
 
 function renderCard(brewery) {
+    //console.log(brewery);
     const cardsSection = document.querySelector('#brewery-cards')
 
     const divCard = document.createElement('div');
     divCard.id = brewery.id;
 
+    //render brewery name
     const breweryName = document.createElement('h2');
     breweryName.classList.add('name');
     breweryName.textContent = brewery.name;
     divCard.append(breweryName);
 
+    //render brewery rating
     const rating = document.createElement('div');
     rating.classList.add('rating');
+    let numstars = 0;
+    if(ratingsJson.find(element => element.apiId === brewery.id)) {
+        const matchIndex = ratingsJson.findIndex(element => element.apiId === brewery.id);
+        numstars = ratingsJson[matchIndex].rating;
+        console.log("numstars:", numstars);
+    }
     for(let i = 0; i < 5; i++){
         const ratingButton = document.createElement('button');
         ratingButton.classList.add(`button-${i+1}`);
-        ratingButton.textContent = starEmpty;
+        numstars >= i+1 ? ratingButton.textContent = starFull : ratingButton.textContent = starEmpty;
         ratingButton.addEventListener('click', (event) => ratingButtonClickHandler(event));
         rating.append(ratingButton);
     }
     divCard.append(rating);
 
+    //render brewery street
     const breweryStreet = document.createElement('p');
     breweryStreet.classList.add('street');
     breweryStreet.textContent = brewery.street;
     divCard.append(breweryStreet);
 
+    //render brewery state
     const breweryCityState = document.createElement('p');
     breweryCityState.classList.add('city-state');
     breweryCityState.textContent = `${brewery.city}, ${brewery.state}`;
     divCard.append(breweryCityState);
 
+    //render brewery phone
     const breweryPhone = document.createElement('p');
     breweryPhone.classList.add('phone');
     breweryPhone.textContent = brewery.phone;
     divCard.append(breweryPhone);
 
+    //render brewery website link
     //console.log(typeof brewery.website_url)
     if (brewery.website_url){
         const breweryWebsite = document.createElement('a'); 
@@ -174,9 +190,3 @@ function postNewRating(event) {
 
 
 init();
-
-/*
-fetch all ratings and create local array out of them 
-then edit that array when ratings are changed. if local rating exists, run "patch".
-If not, run "post"
-*/
