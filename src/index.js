@@ -8,27 +8,27 @@ function init() {
 
     //Create local copy of ratings database in ratingsJson
     fetch(`http://localhost:3000/breweryRatings`)
-    .then(response => response.json())
-    .then(data => {
-        ratingsJson = data;
-        console.log("ratingsJson: ", ratingsJson);
-    });
-    
-    form.addEventListener("submit", (event) =>{
+        .then(response => response.json())
+        .then(data => {
+            ratingsJson = data;
+            console.log("ratingsJson: ", ratingsJson);
+        });
+
+    form.addEventListener("submit", (event) => {
         event.preventDefault();
         const city = event.target["city-input"].value.toLowerCase();
 
         fetch(`https://api.openbrewerydb.org/breweries?by_city=${city}`)
-        .then(response => response.json())
-        .then(breweries => {
-        console.log(`breweries data for ${city}: `, breweries);
-        document.querySelector('#brewery-cards').innerHTML = "";
-        breweries.forEach(brewery => renderCard(brewery));
-        });
+            .then(response => response.json())
+            .then(breweries => {
+                console.log(`breweries data for ${city}: `, breweries);
+                document.querySelector('#brewery-cards').innerHTML = "";
+                breweries.forEach(brewery => renderCard(brewery));
+            });
     })
 
     btn = document.querySelector("#party-button")
-    btn.addEventListener("click", ()=>{
+    btn.addEventListener("click", () => {
         // const img = document.createElement("img")
         // img.src="https://c.tenor.com/_4YgA77ExHEAAAAC/rick-roll.gif"
         alert("21+ ONLY!!!!")
@@ -53,15 +53,15 @@ function renderCard(brewery) {
     const rating = document.createElement('div');
     rating.classList.add('rating');
     let numstars = 0;
-    if(ratingsJson.find(element => element.apiId === brewery.id)) {
+    if (ratingsJson.find(element => element.apiId === brewery.id)) {
         const matchIndex = ratingsJson.findIndex(element => element.apiId === brewery.id);
         numstars = ratingsJson[matchIndex].rating;
-        console.log("numstars:", numstars);
+        //console.log("numstars:", numstars);
     }
-    for(let i = 0; i < 5; i++){
+    for (let i = 0; i < 5; i++) {
         const ratingButton = document.createElement('button');
-        ratingButton.classList.add(`button-${i+1}`);
-        numstars >= i+1 ? ratingButton.textContent = starFull : ratingButton.textContent = starEmpty;
+        ratingButton.classList.add(`button-${i + 1}`);
+        numstars >= i + 1 ? ratingButton.textContent = starFull : ratingButton.textContent = starEmpty;
         ratingButton.addEventListener('click', (event) => ratingButtonClickHandler(event));
         rating.append(ratingButton);
     }
@@ -87,13 +87,13 @@ function renderCard(brewery) {
 
     //render brewery website link
     //console.log(typeof brewery.website_url)
-    if (brewery.website_url){
-        const breweryWebsite = document.createElement('a'); 
+    if (brewery.website_url) {
+        const breweryWebsite = document.createElement('a');
         breweryWebsite.href = brewery.website_url;
         breweryWebsite.textContent = "website"
         divCard.append(breweryWebsite)
     };
-    
+
     cardsSection.append(divCard);
 }
 
@@ -105,7 +105,7 @@ function ratingButtonClickHandler(event) {
     const breweryCardElement = event.target.parentElement.parentElement
 
     //determine whether to post or patch
-    if(ratingsJson.find(element => element.apiId === breweryCardElement.id)) {
+    if (ratingsJson.find(element => element.apiId === breweryCardElement.id)) {
         updateRating(event); //patch
     } else {
         postNewRating(event); //post
@@ -119,14 +119,14 @@ function setStarDisplay(target) {
 
     //change star display
     current.textContent = starFull;
-    while(prevSibling) {
+    while (prevSibling) {
         prevSibling.textContent = starFull;
         current = prevSibling;
         prevSibling = current.previousElementSibling;
     }
     current = target;
     let nextSibling = current.nextElementSibling
-    while(nextSibling) {
+    while (nextSibling) {
         nextSibling.textContent = starEmpty;
         current = nextSibling;
         nextSibling = current.nextElementSibling;
@@ -139,53 +139,53 @@ function updateRating(event) {
     const matchIndex = ratingsJson.findIndex(element => element.apiId === breweryCardElement.id);
 
     const obj = {
-        rating : event.target.className.slice(-1),
-    } 
+        rating: event.target.className.slice(-1),
+    }
 
     fetch(`http://localhost:3000/breweryRatings/${ratingsJson[matchIndex].id}`, {
-    method: 'PATCH',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(obj),
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(obj),
     })
-    .then(response => response.json())
-    .then(data => {
-    console.log('Success:', data);
-    ratingsJson[matchIndex] = data; //update ratingsJson
-    })
-    .catch((error) => {
-    console.error('Error:', error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            ratingsJson[matchIndex] = data; //update ratingsJson
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 }
 
 
 function postNewRating(event) {
     const breweryCardElement = event.target.parentElement.parentElement
-    
+
     const obj = {
-        apiId : breweryCardElement.id,
-        rating : event.target.className.slice(-1),
-    } 
+        apiId: breweryCardElement.id,
+        rating: event.target.className.slice(-1),
+    }
     //update ratingsJson
     // ratingsJson.push(obj);
     // console.log(ratingsJson);
-    
+
     fetch('http://localhost:3000/breweryRatings', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(obj),
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(obj),
     })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-      ratingsJson.push(data); //update ratingsJson
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            ratingsJson.push(data); //update ratingsJson
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 }
 
 
